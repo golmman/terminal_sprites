@@ -13,14 +13,20 @@ fn main() {
 
     let mut pic_width = 0;
 
-    for y in 0..img.dimensions().0 {
+    for y in 0..img.dimensions().1 {
         let mut width_actual = 0;
 
-        for x in 0..img.dimensions().1 {
+        for x in 0..img.dimensions().0 {
             let width_optimal = (x + 1) * font_h;
 
-            let image::Rgba([r, g, b, ..]) = img.get_pixel(y, x);
-            print!("{}", ansi_background_rgb(r, g, b));
+            let image::Rgba([r, g, b, a]) = img.get_pixel(x, y);
+
+            if a == 0 {
+                print!("{}", RESET);
+            } else {
+                print!("{}", ansi_background_rgb(r, g, b));
+            }
+
             while width_actual < width_optimal {
                 print!(" ");
                 width_actual += font_w;
